@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { FormResponse } from "$lib/types"
+    import { Toaster, toast } from 'svelte-sonner'
     let createLink = true
     let oldUrl = ""
     let newUrl = ""
@@ -19,9 +20,12 @@
             if (body.error) throw new Error(body.message)
             await console.log(body)
             newUrl = body.url
+            await toast.success("Success")
 
         } catch (error) {
             err = `${error}`
+            await toast.error(`${error}`)
+
         }
         disabled = false
         createLink = false
@@ -35,6 +39,7 @@
         createLink = true
     }
 </script>
+<Toaster richColors position="top-right" />
 <div class="bg-white"> 
     <div class="relative isolate px-6 pt-14 lg:px-8">
         <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
@@ -104,6 +109,7 @@
                                 class="select-all block w-full rounded-md border-0 py-1.5 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                 on:click={async () => {
                                     await navigator.clipboard.writeText(newUrl)
+                                    toast.info("Copied to clipboard")
                                 }}
                             >
                                 {newUrl}
